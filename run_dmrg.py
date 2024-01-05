@@ -29,7 +29,7 @@ def measurements(psi):
     Q1 = - SxSx + SySy
     Q2 = np.sqrt(1./3.) * ( 2.*SzSz - SxSx - SySy )
     Q3 = psi.expectation_value("Sx Sy") + psi.expectation_value("Sy Sx")
-    Q4 = - psi.expectation_value("Sz Sx") + psi.expectation_value("Sx Sz")
+    Q4 = - psi.expectation_value("Sz Sx") - psi.expectation_value("Sx Sz")
     Q5 = psi.expectation_value("Sy Sz") + psi.expectation_value("Sz Sy")
 
     return np.real(Sx), np.real(Sy), np.real(Sz), np.real(Q1), np.real(Q2), np.real(Q3), np.real(Q4), np.real(Q5)
