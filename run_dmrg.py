@@ -102,7 +102,7 @@ if __name__ == "__main__":
     # parser for command line arguments
     parser=argparse.ArgumentParser()
     parser.add_argument("--Lx", default='2', help="Length of cylinder")
-    parser.add_argument("--Ly", default='2', help="Length of cylinder")
+    parser.add_argument("--Ly", default='2', help="Circumference of cylinder")
     parser.add_argument("--J1", default='1.0', help="nn (FM) Heisenberg coupling")
     parser.add_argument("--J2", default='0.61803398875', help=" nnn (AFM) Heisenberg coupling")
     parser.add_argument("--delta", default='1.0', help="Anisotropy")
