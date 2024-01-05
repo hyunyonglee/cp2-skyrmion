@@ -18,6 +18,8 @@ def ensure_dir(f):
 def measurements(psi):
     
     # Measurements
+    EE = psi.entanglement_entropy()
+
     Sx = psi.expectation_value("Sx")
     Sy = psi.expectation_value("Sy")
     Sz = psi.expectation_value("Sz")
@@ -32,18 +34,19 @@ def measurements(psi):
     Q4 = - psi.expectation_value("Sz Sx") - psi.expectation_value("Sx Sz")
     Q5 = psi.expectation_value("Sy Sz") + psi.expectation_value("Sz Sy")
 
-    return np.real(Sx), np.real(Sy), np.real(Sz), np.real(Q1), np.real(Q2), np.real(Q3), np.real(Q4), np.real(Q5)
+    return EE, np.real(Sx), np.real(Sy), np.real(Sz), np.real(Q1), np.real(Q2), np.real(Q3), np.real(Q4), np.real(Q5)
 
 
-def write_data( psi, E, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5, Lx, Ly, delta, D, h, path ):
+def write_data( psi, E, EE, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5, Lx, Ly, delta, D, h, path ):
 
     ensure_dir(path+"/observables/")
     ensure_dir(path+"/mps/")
 
     data = {"psi": psi}
-    with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_delta_%.2f_D_%.2f_h_%.2f.h5" % (Lx,Ly,delta,D,h), 'w') as f:
+    with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_delta_%.2f_h_%.2f_D_%.2f.h5" % (Lx,Ly,delta,D,h), 'w') as f:
         hdf5_io.save_to_hdf5(f, data)
 
+    file_EE = open(path+"/observables/EE.txt","a", 1)    
     file_Sx = open(path+"/observables/Sx.txt","a", 1)
     file_Sy = open(path+"/observables/Sy.txt","a", 1)
     file_Sz = open(path+"/observables/Sz.txt","a", 1)
@@ -53,6 +56,7 @@ def write_data( psi, E, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5, Lx, Ly, delta, D, h, pat
     file_Q4 = open(path+"/observables/Q4.txt","a", 1)
     file_Q5 = open(path+"/observables/Q5.txt","a", 1)
         
+    file_EE.write(repr(delta) + " " + repr(h) + " " + repr(D) + " " + "  ".join(map(str, EE)) + " " + "\n")
     file_Sx.write(repr(delta) + " " + repr(h) + " " + repr(D) + " " + "  ".join(map(str, Sx)) + " " + "\n")
     file_Sy.write(repr(delta) + " " + repr(h) + " " + repr(D) + " " + "  ".join(map(str, Sy)) + " " + "\n")
     file_Sz.write(repr(delta) + " " + repr(h) + " " + repr(D) + " " + "  ".join(map(str, Sz)) + " " + "\n")
@@ -62,6 +66,7 @@ def write_data( psi, E, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5, Lx, Ly, delta, D, h, pat
     file_Q4.write(repr(delta) + " " + repr(h) + " " + repr(D) + " " + "  ".join(map(str, Q4)) + " " + "\n")
     file_Q5.write(repr(delta) + " " + repr(h) + " " + repr(D) + " " + "  ".join(map(str, Q5)) + " " + "\n")
     
+    file_EE.close()
     file_Sx.close()
     file_Sy.close()
     file_Sz.close()
@@ -73,7 +78,7 @@ def write_data( psi, E, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5, Lx, Ly, delta, D, h, pat
     
     #
     file = open(path+"/observables.txt","a", 1)    
-    file.write(repr(delta) + " " + repr(h) + " " + repr(D) + " " + repr(E) + " " + repr(np.mean(Sx)) + " " + repr(np.mean(Sy)) + " " + repr(np.mean(Sz)) + " " + repr(np.mean(Q1)) + " " + repr(np.mean(Q2)) + " " + repr(np.mean(Q3)) + " " + repr(np.mean(Q4)) + " " + repr(np.mean(Q5)) + " " + "\n")
+    file.write(repr(delta) + " " + repr(h) + " " + repr(D) + " " + repr(E) + " " + repr(np.max(EE)) + " " + repr(np.mean(Sx)) + " " + repr(np.mean(Sy)) + " " + repr(np.mean(Sz)) + " " + repr(np.mean(Q1)) + " " + repr(np.mean(Q2)) + " " + repr(np.mean(Q3)) + " " + repr(np.mean(Q4)) + " " + repr(np.mean(Q5)) + " " + "\n")
     file.close()
 
     
@@ -103,7 +108,7 @@ if __name__ == "__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("--Lx", default='2', help="Length of cylinder")
     parser.add_argument("--Ly", default='2', help="Circumference of cylinder")
-    parser.add_argument("--J1", default='1.0', help="nn (FM) Heisenberg coupling")
+    parser.add_argument("--J1", default='1.0', help=" nn (FM) Heisenberg coupling")
     parser.add_argument("--J2", default='0.61803398875', help=" nnn (AFM) Heisenberg coupling")
     parser.add_argument("--delta", default='1.0', help="Anisotropy")
     parser.add_argument("--D", default='0.0', help="Easy-plane anisotropy")
@@ -147,7 +152,7 @@ if __name__ == "__main__":
     psi = MPS.from_product_state(CP2_SkX.lat.mps_sites(), product_state, bc=CP2_SkX.lat.bc_MPS)
 
     if RM == 'random':
-        TEBD_params = {'N_steps': 10, 'trunc_params':{'chi_max': 30}, 'verbose': 0}
+        TEBD_params = {'N_steps': 20, 'trunc_params':{'chi_max': 100}, 'verbose': 0}
         eng = tebd.RandomUnitaryEvolution(psi, TEBD_params)
         eng.run()
         psi.canonical_form() 
@@ -176,5 +181,5 @@ if __name__ == "__main__":
     E, psi = eng.run()  # equivalent to dmrg.run() up to the return parameters.
     psi.canonical_form() 
 
-    Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5 = measurements(psi)
-    write_data( psi, E, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5, Lx, Ly, delta, D, h, path )
+    EE, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5 = measurements(psi)
+    write_data( psi, E, EE, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5, Lx, Ly, delta, D, h, path )
