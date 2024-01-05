@@ -54,8 +54,8 @@ class CP2_SKYRMION(CouplingModel,MPOModel):
         
         # NN XXZ
         for u1, u2, dx in self.lat.pairs['next_nearest_neighbors']:
-            self.add_coupling(-J2, u1, 'Sx', u2, 'Sx', dx)
-            self.add_coupling(-J2, u1, 'Sy', u2, 'Sy', dx)
-            self.add_coupling(-J2*delta, u1, 'Sz', u2, 'Sz', dx)
+            self.add_coupling(J2, u1, 'Sx', u2, 'Sx', dx)
+            self.add_coupling(J2, u1, 'Sy', u2, 'Sy', dx)
+            self.add_coupling(J2*delta, u1, 'Sz', u2, 'Sz', dx)
         
         MPOModel.__init__(self, lat, self.calc_H_MPO())
