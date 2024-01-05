@@ -17,7 +17,8 @@ class CP2_SKYRMION(CouplingModel,MPOModel):
             model_params = Config(model_params, "CP2_SKYRMION")
         Lx = model_params.get('Lx', 1)
         Ly = model_params.get('Ly', 2)
-        J = model_params.get('J', 1.)
+        J1 = model_params.get('J1', 1.)
+        J2 = model_params.get('J2', 0.)
         delta = model_params.get('delta', 1.)
         D = model_params.get('D', 0.)
         h = model_params.get('h', 0.)
@@ -47,8 +48,14 @@ class CP2_SKYRMION(CouplingModel,MPOModel):
         
         # NN XXZ
         for u1, u2, dx in self.lat.pairs['nearest_neighbors']:
-            self.add_coupling(-J, u1, 'Sx', u2, 'Sx', dx)
-            self.add_coupling(-J, u1, 'Sy', u2, 'Sy', dx)
-            self.add_coupling(-J*delta, u1, 'Sz', u2, 'Sz', dx)
+            self.add_coupling(-J1, u1, 'Sx', u2, 'Sx', dx)
+            self.add_coupling(-J1, u1, 'Sy', u2, 'Sy', dx)
+            self.add_coupling(-J1*delta, u1, 'Sz', u2, 'Sz', dx)
+        
+        # NN XXZ
+        for u1, u2, dx in self.lat.pairs['next_nearest_neighbors']:
+            self.add_coupling(-J2, u1, 'Sx', u2, 'Sx', dx)
+            self.add_coupling(-J2, u1, 'Sy', u2, 'Sy', dx)
+            self.add_coupling(-J2*delta, u1, 'Sz', u2, 'Sz', dx)
         
         MPOModel.__init__(self, lat, self.calc_H_MPO())

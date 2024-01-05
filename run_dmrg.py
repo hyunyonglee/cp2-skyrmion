@@ -103,10 +103,11 @@ if __name__ == "__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument("--Lx", default='2', help="Length of cylinder")
     parser.add_argument("--Ly", default='2', help="Length of cylinder")
-    parser.add_argument("--J", default='1.0', help="(Ferromagnetic) Heisenberg coupling")
+    parser.add_argument("--J1", default='1.0', help="(Ferromagnetic) nn Heisenberg coupling")
+    parser.add_argument("--J2", default='0.61803398875', help="(Ferromagnetic) nnn Heisenberg coupling")
     parser.add_argument("--delta", default='1.0', help="Anisotropy")
     parser.add_argument("--D", default='0.0', help="Easy-plane anisotropy")
-    parser.add_argument("--h", default='10.0', help="Magnetic field")
+    parser.add_argument("--h", default='0.0', help="Magnetic field")
     parser.add_argument("--chi", default='20', help="Bond dimension")
     parser.add_argument("--init_state", default='up', help="Initial state")
     parser.add_argument("--RM", default=None, help="path for saving data")
@@ -117,7 +118,8 @@ if __name__ == "__main__":
     # parameters
     Lx = int(args.Lx)
     Ly = int(args.Ly)
-    J = float(args.J)
+    J1 = float(args.J1)
+    J2 = float(args.J2)
     delta = float(args.delta)
     D = float(args.D)
     h = float(args.h)
@@ -131,7 +133,8 @@ if __name__ == "__main__":
     model_params = {
     "Lx": Lx,
     "Ly": Ly,
-    "J": J,
+    "J1": J1,
+    "J2": J2,
     "delta": delta,
     "D": D,
     "h": h
