@@ -178,7 +178,7 @@ if __name__ == "__main__":
         'chi_max': chi,
         'svd_min': 1.e-9
     },
-    'chi_list': { 0: 8, 5: 16, 10: 32, 15: 64, 20: chi },
+    'chi_list': { 0: 32, 15: 64, 20: chi },
     'max_E_err': 1.0e-9,
     'max_S_err': 1.0e-9,
     'max_sweeps': max_sweep,
