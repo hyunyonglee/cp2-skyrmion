@@ -117,6 +117,7 @@ if __name__ == "__main__":
     parser.add_argument("--init_state", default='up', help="Initial state")
     parser.add_argument("--RM", default=None, help="path for saving data")
     parser.add_argument("--max_sweep", default='50', help="Maximum number of sweeps")
+    parser.add_argument("--bc_MPS", default='finite', help="'finite' or 'infinite' DMRG")
     parser.add_argument("--path", default=current_directory, help="path for saving data")
     args=parser.parse_args()
 
@@ -132,17 +133,25 @@ if __name__ == "__main__":
     init_state = args.init_state
     RM = args.RM
     max_sweep = int(args.max_sweep)
+    bc_MPS = args.bc_MPS
     path = args.path
+
+    if bc_MPS == 'infinite':
+        bc = 'periodic'
+    else:
+        bc = ['open','periodic']
 
     # model parameters    
     model_params = {
-    "Lx": Lx,
-    "Ly": Ly,
-    "J1": J1,
-    "J2": J2,
-    "delta": delta,
-    "D": D,
-    "h": h
+        "Lx": Lx,
+        "Ly": Ly,
+        "J1": J1,
+        "J2": J2,
+        "delta": delta,
+        "D": D,
+        "h": h,
+        "bc_MPS": bc_MPS,
+        "bc": bc
     }
 
     CP2_SkX = model.CP2_SKYRMION(model_params)
