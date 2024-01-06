@@ -43,7 +43,7 @@ def write_data( psi, E, EE, Sx, Sy, Sz, Q1, Q2, Q3, Q4, Q5, Lx, Ly, delta, D, h,
     ensure_dir(path+"/mps/")
 
     data = {"psi": psi}
-    with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_delta_%.2f_h_%.2f_D_%.2f.h5" % (Lx,Ly,delta,D,h), 'w') as f:
+    with h5py.File(path+"/mps/psi_Lx_%d_Ly_%d_delta_%.2f_h_%.2f_D_%.2f.h5" % (Lx,Ly,delta,h,D), 'w') as f:
         hdf5_io.save_to_hdf5(f, data)
 
     file_EE = open(path+"/observables/EE.txt","a", 1)    
