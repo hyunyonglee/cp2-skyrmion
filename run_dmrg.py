@@ -186,8 +186,8 @@ if __name__ == "__main__":
     }
 
     # ground state
-    eng = dmrg.SingleSiteDMRGEngine(psi, CP2_SkX, dmrg_params)
-    # eng = dmrg.TwoSiteDMRGEngine(psi, CP2_SkX, dmrg_params)
+    # eng = dmrg.SingleSiteDMRGEngine(psi, CP2_SkX, dmrg_params)
+    eng = dmrg.TwoSiteDMRGEngine(psi, CP2_SkX, dmrg_params)
     E, psi = eng.run()  # equivalent to dmrg.run() up to the return parameters.
     psi.canonical_form() 
 
